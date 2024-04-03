@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: AuthService
+  cloud:
+    consul:
+      config:
+        enabled: false
+      discovery:
+        healthCheckPath: /actuator/health
+        healthCheckInterval: 20s
+        instanceId: ${spring.application.name}:${random.value}
+server:
+  port: 8084

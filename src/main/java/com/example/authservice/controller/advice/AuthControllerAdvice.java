@@ -1,5 +1,6 @@
 package com.example.authservice.controller.advice;
 
+import com.example.authservice.model.dto.ApiErrorResponse;
 import com.example.authservice.model.exception.AuthenticationException;
 import com.example.authservice.model.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ public class AuthControllerAdvice {
         log.error("Authentication exception", e);
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
-                .body(e.getMessage());
+                .body(new ApiErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(IllegalStateException.class)
@@ -25,7 +26,7 @@ public class AuthControllerAdvice {
         log.error("Bad request exception", e);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
+                .body(new ApiErrorResponse(e.getMessage()));
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -33,14 +34,6 @@ public class AuthControllerAdvice {
         log.error("Not found exception", e);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(e.getMessage());
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> internalException(Exception e) {
-        log.error("Internal error", e);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Internal server error");
+                .body(new ApiErrorResponse(e.getMessage()));
     }
 }

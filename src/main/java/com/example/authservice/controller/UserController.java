@@ -1,14 +1,14 @@
 package com.example.authservice.controller;
 
-import com.example.authservice.model.dto.AddUserRequest;
-import com.example.authservice.model.dto.AuthUserDto;
-import com.example.authservice.model.dto.ChangeRolesRequest;
-import com.example.authservice.model.dto.TokenDto;
+import com.example.authservice.model.dto.*;
 import com.example.authservice.service.facade.UserFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -30,5 +30,36 @@ public class UserController {
             @RequestBody ChangeRolesRequest changeRolesRequest
     ) {
         return ResponseEntity.ok(userFacade.changeRoles(id, changeRolesRequest));
+    }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<AuthUserDto> getUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userFacade.getUser(id));
+    }
+
+    @GetMapping("/get-all")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<AuthUserDto>> getAllUsers() {
+        return ResponseEntity.ok(userFacade.getAllUsers());
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
+    public ResponseEntity<AuthUserDto> removeUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(userFacade.removeUser(id));
+    }
+
+    @PatchMapping("/self-change-password")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<String> selfChangePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.ok(userFacade.changePasswordByUser(username, changePasswordRequest));
+    }
+
+    @PatchMapping("/change-password-to-user")
+    @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
+    public ResponseEntity<String> changeOtherUserPassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
+        return ResponseEntity.ok(userFacade.changeOtherUserPassword(changePasswordRequest));
     }
 }

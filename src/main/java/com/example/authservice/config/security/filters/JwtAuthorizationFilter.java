@@ -1,4 +1,4 @@
-package com.example.authservice.security.filters;
+package com.example.authservice.config.security.filters;
 
 import com.example.authservice.service.JwtService;
 import jakarta.servlet.FilterChain;

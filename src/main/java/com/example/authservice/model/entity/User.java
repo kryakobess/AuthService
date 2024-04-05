@@ -1,5 +1,7 @@
 package com.example.authservice.model.entity;
 
+import com.example.authservice.model.enums.AuthorityType;
+import com.example.authservice.model.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,9 +43,20 @@ public class User {
     }
 
     public Set<GrantedAuthority> getAuthorities() {
-        return roles.stream()
+        Set<GrantedAuthority> grantedRoles = roles.stream()
                 .map(Role::getRoleName)
+                .map(RoleType::name)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
+
+        Set<GrantedAuthority> grantedAuthorities = roles.stream()
+                .flatMap(role -> role.getAuthorities().stream())
+                .map(Authority::getName)
+                .map(AuthorityType::name)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet());
+
+        grantedAuthorities.addAll(grantedRoles);
+        return grantedAuthorities;
     }
 }

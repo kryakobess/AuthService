@@ -18,13 +18,13 @@ public class UserController {
     private final UserFacade userFacade;
 
     @PostMapping("/add")
-    @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
+    @PreAuthorize("hasAuthority(T(com.example.authservice.model.enums.AuthorityType).USER_MANIPULATOR)")
     public ResponseEntity<AuthUserDto> createUser(@RequestBody AddUserRequest addUserRequest) {
         return ResponseEntity.ok(userFacade.addUser(addUserRequest));
     }
 
     @PutMapping("/{id}/change-roles")
-    @PreAuthorize("hasAnyAuthority('SYSTEM_ADMIN', 'ROLE_MANIPULATOR')")
+    @PreAuthorize("hasAuthority(T(com.example.authservice.model.enums.AuthorityType).USER_MANIPULATOR)")
     public ResponseEntity<AuthUserDto> changeRoles(
             @PathVariable("id") Long id,
             @RequestBody ChangeRolesRequest changeRolesRequest
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
+    @PreAuthorize("hasRole(T(com.example.authservice.model.enums.RoleType).ROLE_SYSTEM_ADMIN)")
     public ResponseEntity<AuthUserDto> removeUser(@PathVariable("id") Long id) {
         return ResponseEntity.ok(userFacade.removeUser(id));
     }
@@ -58,7 +58,7 @@ public class UserController {
     }
 
     @PatchMapping("/change-password-to-user")
-    @PreAuthorize("hasAuthority('SYSTEM_ADMIN')")
+    @PreAuthorize("hasRole(T(com.example.authservice.model.enums.RoleType).ROLE_SYSTEM_ADMIN)")
     public ResponseEntity<String> changeOtherUserPassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
         return ResponseEntity.ok(userFacade.changeOtherUserPassword(changePasswordRequest));
     }

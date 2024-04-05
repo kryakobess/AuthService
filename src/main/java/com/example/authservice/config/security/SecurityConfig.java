@@ -1,6 +1,6 @@
-package com.example.authservice.security;
+package com.example.authservice.config.security;
 
-import com.example.authservice.security.filters.JwtAuthorizationFilter;
+import com.example.authservice.config.security.filters.JwtAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

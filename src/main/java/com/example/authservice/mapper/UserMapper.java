@@ -21,6 +21,6 @@ public interface UserMapper {
         if (roles == null) {
             return null;
         }
-        return roles.stream().map(Role::getRoleName).toList();
+        return roles.stream().map(role -> role.getRoleName().name()).toList();
     }
 }

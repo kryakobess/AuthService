@@ -5,6 +5,7 @@ import com.example.authservice.model.dto.AddUserRequest;
 import com.example.authservice.model.dto.AuthUserDto;
 import com.example.authservice.model.dto.ChangePasswordRequest;
 import com.example.authservice.model.dto.ChangeRolesRequest;
+import com.example.authservice.model.enums.RoleType;
 import com.example.authservice.model.exception.AuthenticationException;
 import com.example.authservice.service.UserService;
 import com.example.authservice.service.facade.UserFacade;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -40,7 +42,7 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public AuthUserDto changeRoles(Long id, ChangeRolesRequest changeRolesRequest) {
         log.info("Getting PUT changeRoles request for userId: {}, roles: {}", id, changeRolesRequest.getRoles());
-        return mapper.toAuthUserDto(userService.changeRolesForUser(id, changeRolesRequest.getRoles()));
+        return mapper.toAuthUserDto(userService.changeRolesForUser(id, roleNamesToTypes(changeRolesRequest.getRoles())));
     }
 
     @Override
@@ -88,5 +90,17 @@ public class UserFacadeImpl implements UserFacade {
                 changePasswordRequest.getNewPassword()
         );
         return "Password changed";
+    }
+
+    private List<RoleType> roleNamesToTypes(List<String> roles) {
+        try {
+            return roles.stream()
+                    .map(RoleType::valueOf)
+                    .collect(Collectors.toList());
+        } catch (IllegalStateException e) {
+            log.error("Error during role converting", e);
+            throw new IllegalStateException("Request contains unknown role");
+        }
+
     }
 }

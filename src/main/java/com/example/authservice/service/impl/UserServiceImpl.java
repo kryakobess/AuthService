@@ -2,6 +2,7 @@ package com.example.authservice.service.impl;
 
 import com.example.authservice.model.entity.Role;
 import com.example.authservice.model.entity.User;
+import com.example.authservice.model.enums.RoleType;
 import com.example.authservice.model.exception.AuthenticationException;
 import com.example.authservice.model.exception.NotFoundException;
 import com.example.authservice.repository.UserRepository;
@@ -49,20 +50,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public User changeRolesForUser(Long id, List<String> roles) {
+    public User changeRolesForUser(Long id, List<RoleType> roles) {
         var user = findById(id);
         var allRoles = roleService.getAll();
-
-        if (hasUnknownRoles(roles, allRoles)) {
-            throw new IllegalStateException("Contains unknown roles");
-        } else {
-            var rolesSet = new HashSet<>(roles);
-            List<Role> rolesToChange = allRoles.stream()
-                    .filter(role -> rolesSet.contains(role.getRoleName()))
-                    .toList();
-            user.setRoles(rolesToChange);
-            return userRepository.save(user);
-        }
+        var rolesSet = new HashSet<>(roles);
+        List<Role> rolesToChange = allRoles.stream()
+                .filter(role -> rolesSet.contains(role.getRoleName()))
+                .collect(Collectors.toList());
+        user.setRoles(rolesToChange);
+        return userRepository.save(user);
     }
 
     @Override
@@ -91,16 +87,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-    }
-
-    private boolean hasUnknownRoles(List<String> roles, Set<Role> allRoles) {
-        var allRoleNames = allRoles.stream()
-                .map(Role::getRoleName)
-                .collect(Collectors.toSet());
-        var unknownRoles = roles.stream()
-                .filter(role -> !allRoleNames.contains(role))
-                .toList();
-        return !unknownRoles.isEmpty();
     }
 
     @Override

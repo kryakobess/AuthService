@@ -13,6 +13,7 @@ spring:
 
 
 jwt:
+  expireTimeInMinutes: 30
   privateKey:
     MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCb1HJYIc63G8+G
     hB8syEnMH/c3LWVHMEC+uYHfzeOHgsxCS29BOab/pr4jtj8yc9XdNARHq/UqRIyx

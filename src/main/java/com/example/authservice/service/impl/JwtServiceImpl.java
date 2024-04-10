@@ -18,6 +18,8 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
@@ -36,6 +38,7 @@ public class JwtServiceImpl implements JwtService {
                 .signWith(getPrivateKey(), SignatureAlgorithm.RS256)
                 .claim("username", authentication.getName())
                 .claim("authorities", authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+                .setExpiration(Date.from(LocalDateTime.now().plusMinutes(jwtProperties.getExpireTimeInMinutes()).atZone(ZoneId.systemDefault()).toInstant()))
                 .setSubject(authentication.getName())
                 .compact();
 

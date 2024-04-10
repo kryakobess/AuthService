@@ -10,4 +10,5 @@ import org.springframework.context.annotation.Configuration;
 public class JwtProperties {
     private String privateKey;
     private String publicKey;
+    private Integer expireTimeInMinutes;
 }

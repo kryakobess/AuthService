@@ -22,8 +22,15 @@ public class SecurityConfig {
 
     private static final String[] OPEN_ENDPOINTS = new String[] {
             "/login",
-            "/actuator/**",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
             "/v3/api-docs/**",
+            "/actuator/*",
+            "/swagger-ui/**",
             "/dictionary/**"
     };
 

@@ -11,3 +11,7 @@ spring:
         instanceId: ${spring.application.name}:${random.value}
 server:
   port: 8084
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui

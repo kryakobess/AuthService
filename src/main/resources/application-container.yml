@@ -1,11 +1,11 @@
 spring:
   cloud:
     consul:
-      host: localhost
+      host: host.docker.internal
       port: 8500
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5434/auth_db
+    url: jdbc:postgresql://host.docker.internal:5434/auth_db
     username: postgres
     password: postgres
   flyway:
@@ -48,6 +48,3 @@ jwt:
     ElayWn9CsHn9dkduAG6ymkbl1Mozar+u818YgcuLuMBSaF5off+I0B46Wd9z9TxL
     kR9jP/sjwSttp9rUkr1Qump1BGCs63KsTHIQLmDBXTguqMnGJz0wYODfVMpsOdVw
     kQIDAQAB
-
-server:
-  port: 8084

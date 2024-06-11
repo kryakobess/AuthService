@@ -10,7 +10,7 @@ spring:
         healthCheckInterval: 20s
         instanceId: ${spring.application.name}:${random.value}
 server:
-  port: 8084
+  port: 8080
 
 springdoc:
   swagger-ui:
